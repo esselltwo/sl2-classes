@@ -1,0 +1,38 @@
+\ProvidesFile{alphabetic-side.cbx}
+
+\RequireCitationStyle{alphabetic}
+
+\ExecuteBibliographyOptions{citetracker=constrict}
+
+\DeclareFieldFormat{shortdoi}{
+  \ifhyperref{%
+    \href{https://doi.org/#1}{\mkbibacro{DOI}}
+  }%
+  {\nolinkurl{#1}}
+}
+
+\DeclareFieldFormat{shortarXiv}{%
+  \href{https://arxiv.org/abs/#1}{arXiv}}
+
+\DeclareNameFormat{init-family}{%
+  {\usebibmacro{name:given-family}%
+    {\namepartfamily}
+    {\namepartgiveni}
+    {\namepartprefix}
+    {\namepartsuffix}}%
+  \usebibmacro{name:andothers}}
+
+\newbibmacro*{addfoot}{%
+  \@ifundefined{@captype}{%
+  \marginpar{\footnotesize [\usebibmacro{cite}] \printnames[init-family]{author}, \usebibmacro{title} \printfield[shortarXiv]{eprint} \printfield[shortdoi]{doi}}%
+  }{}%
+}
+
+\DeclareCiteCommand{\cite}[\mkbibbrackets]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+    \usebibmacro{cite}%
+    \ifciteseen{}{\usebibmacro{addfoot}}%
+  }
+  {\multicitedelim}
+  {\usebibmacro{postnote}}

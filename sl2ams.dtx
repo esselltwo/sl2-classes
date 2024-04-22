@@ -1,0 +1,174 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2024 Calvin McPhail-Snyder
+% --------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.3c or later is part of all distributions of LaTeX
+% version 2008-05-04 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{sl2ams.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<class>\ProvidesExplClass{sl2ams}{2024-02-12}{v0.1}{a compatibility layer for using AMS article style}
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{xcolor}
+\EnableCrossrefs
+\RecordChanges
+\begin{document}
+  \DocInput{sl2ams.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \changes{v0.1}{2024-02-12}{Initial version}
+%
+% \GetFileInfo{sl2ams.dtx}
+%
+%
+% \title{The \textsf{sl2ams} class\thanks{This document
+%   corresponds to \textsf{sl2ams}~\fileversion,
+%   dated \filedate.}}
+% \author{Calvin McPhail-Snyder \\ \texttt{calvin@sl2.site}}
+%
+% \maketitle
+% \begin{abstract}
+%   A class for setting |sl2art| documents to match the AMS article class.
+% \end{abstract}
+%
+% \section{Introduction}
+% Suppose you have a |sl2art| document that you need to typeset in a standard format.
+% For example, some journals ask for submissions in |amsart| as a way to compare lengths of papers.
+% You can do this by just changing the document class to |sl2ams| without changing any of the other source code.
+%
+% \section{Implementation}
+%
+% Set up keys for package options; most of these don't do anything any more, but we include them for compatibility.
+%    \begin{macrocode}
+\RequirePackage{expl3,l3keys2e}
+\keys_define:nn{ sl }
+  {
+    draft .bool_set:N = \g_sl_draft_bool,
+    draft .initial:n = false,
+    draft .default:n = true,
+    margincite .bool_set:N = \g_sl_margincite_bool,
+    margincite .initial:n = true,
+    margincite .default:n = true,
+    titlepage .bool_set:N = \g_sl_titlepage_bool,
+    titlepage .initial:n = true,
+    titlepage .default:n = true,
+  }
+\ProcessKeysOptions{ sl }
+%    \end{macrocode}
+%
+% We use \texttt{amsart} as a base class.
+%    \begin{macrocode}
+\LoadClass{amsart}
+%    \end{macrocode}
+%
+% Use nice fonts
+%    \begin{macrocode}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{microtype}
+%    \end{macrocode}
+%
+% \begin{macro}{colorpalette}
+% Define colors
+%    \begin{macrocode}
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{914E0F}
+\definecolor{link}{HTML}{105C9C}
+\definecolor{slred}{HTML}{FA3F2D}
+\definecolor{slyellow}{HTML}{F08813}
+\definecolor{slgreen}{HTML}{01F556}
+\definecolor{slblue}{HTML}{30A4FF}
+\definecolor{slpurple}{HTML}{AD2BF0}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{macro}{\defemph}
+% Make |\defemph| mean |\emph|
+%    \begin{macrocode}
+\NewDocumentCommand{\defemph}{m}{{\emph{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% Make notes footnote and marginfigures figures
+%    \begin{macrocode}
+\NewDocumentCommand{\note}{m}{\footnote{#1}}
+\NewDocumentEnvironment{marginfigure}{ o }{\begin{figure}}{\end{figure}}
+\NewDocumentEnvironment{margintable}{ o }{\begin{table}}{\end{table}}
+%    \end{macrocode}
+%
+%
+% Set up numeric citations.
+%    \begin{macrocode}
+\RequirePackage[style=numeric]{biblatex}
+%    \end{macrocode}
+%
+% Theorem styles imitating the AMS theorem styles.
+% We go ahead and load |mathtools| (and some related math packages) because it needs to be loaded before |cleveref| and for the intended use of this class you'd want it loaded anyway.
+%    \begin{macrocode}
+\RequirePackage{amsthm,amssymb,mathtools}
+\RequirePackage{thmtools}
+\declaretheoremstyle[
+  spaceabove=\topsep,
+  spacebelow=\topsep,
+  bodyfont=\itshape,
+  headfont=\bfseries,
+  headpunct={.},
+  postheadspace={5pt plus 1pt minus 1pt},
+  parent=section,
+]{theorem}
+\declaretheoremstyle[
+  spaceabove=\topsep,
+  spacebelow=\topsep,
+  bodyfont=\itshape,
+  headfont=\bfseries,
+  headpunct={.},
+  postheadspace={5pt plus 1pt minus 1pt},
+]{bigtheorem}
+\declaretheoremstyle[
+  spaceabove=\topsep,
+  spacebelow=\topsep,
+  headfont=\bfseries,
+  headpunct={.},
+  postheadspace={5pt plus 1pt minus 1pt},
+  parent=section,
+]{definition}
+%    \end{macrocode}
+%
+% We conclude with |hyperref| and |cleveref| setup.
+%    \begin{macrocode}
+\RequirePackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  citecolor=link,
+  linkcolor=link,
+  menucolor=link,
+  linktocpage=true,
+  urlcolor=link,
+  draft=false
+}
+
+\RequirePackage[noabbrev,capitalize]{cleveref}
+\crefname{equation}{equation}{equations}
+\Crefname{equation}{Equation}{Equations}
+
+%    \end{macrocode}
+%
+% \Finale
+\endinput

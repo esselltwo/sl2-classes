@@ -1,0 +1,407 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2024 Calvin McPhail-Snyder
+% --------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%
+% http://www.latex-project.org/lppl.txt
+%
+% and version 1.3c or later is part of all distributions of LaTeX
+% version 2008-05-04 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{sl2art.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+%<class>\ProvidesExplClass{sl2art}{2024-02-12}{v0.1}{a one-and-a-half-column article class for mathematics}
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{xcolor,amssymb}
+\EnableCrossrefs
+\RecordChanges
+\begin{document}
+  \DocInput{sl2art.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \changes{v0.1}{2024-02-12}{Initial version}
+%
+% \GetFileInfo{sl2art.dtx}
+%
+% \parskip=12pt
+%
+% \title{The \textsf{sl2art} class\thanks{This document
+%   corresponds to \textsf{sl2art}~\fileversion,
+%   dated \filedate.}}
+% \author{Calvin McPhail-Snyder \\ \texttt{calvin@sl2.site}}
+%
+% \maketitle
+% \begin{abstract}
+%   This is a document class for writing mathematics notes and papers.
+%   It uses a ``one and a half column'' layout: the text block is shifted to one side to allow use of the wide margin for notes, citations, and small figures.
+% \end{abstract}
+%
+% \section{Introduction}
+%
+% This is a document class for mathematics papers.
+% It is probably easiest to see how to use this class by looking at some of the example files; |example.tex| talks more about design choices.
+%   This class is not particularly customizable, since the goal was to make a class for how I like to do things.
+%   However, you are welcome to use it as a starting point for creating your own styles.
+% 
+% \section{Usage}
+%
+% \DescribeMacro{\maketitle}
+% By default we use a title page.
+% To add author information use |\author| and optionally |\address| (for affiliations) and |\email|, with one invocation for each author.
+% The abstract is set in the |abstract| environment, which can be placed anywhere before calling |\maketitle|, but ideally should be set after |\begin{document}| for better compatibility with the |sl2ams| compatibility layer.
+%
+% \DescribeMacro{\defemph}
+% For definitional emphasis; in addition to italics, we use the accent color to make key words stand out.
+%
+% \DescribeMacro{\note}
+% Create a sidenote, which we use instead of footnotes.
+%
+% \DescribeMacro{\marginfigure}
+% Taken from the |sidenotes| package, for placing figures in the margin.
+% These should be at most 2in wide to fit.
+% One can also use |\margintable| for tables.
+%
+% \DescribeMacro{\declaretheorem}
+% We use |thmtools| for creating theorem-like environments.
+% By default there are three styles.
+% |theorem| and |definition| are almost identical, but |theorem| uses a \(\lrcorner\) to indicate the end of the theorem (since we \emph{don't} use italicized text for theorem statements).
+% The intent is |theorem| for theorems, lemmas, etc. and |definition| for definitions, remarks, and examples.
+% Both are numbered by section.
+% |bigtheorem| is identical to |theorem| but by default has its own global numbering; the idea is that major results are just "Theorem 1, Theorem 2" and so on.
+%
+% \definecolor{accent}{HTML}{914E0F}
+% \definecolor{link}{HTML}{105C9C}
+% \definecolor{slred}{HTML}{FA3F2D}
+% \definecolor{slyellow}{HTML}{F08813}
+% \definecolor{slgreen}{HTML}{01F556}
+% \definecolor{slblue}{HTML}{30A4FF}
+% \definecolor{slpurple}{HTML}{AD2BF0}
+% \DescribeMacro{colorpalette}
+% In addition to some colors {\color{accent} \texttt{accent}} (for section headers, emphasis, etc.) and {\color{link} \texttt{link}} (for hyperlinks) we define
+% \begin{itemize}
+%   \item {\color{slred} \texttt{slred FA3F2D}} 
+%   \item {\color{slyellow} \texttt{slyellow F08813}} 
+%   \item {\color{slgreen} \texttt{slgreen 01F556}} 
+%   \item {\color{slblue} \texttt{slblue 30A4FF}} 
+%   \item {\color{slpurple} \texttt{slpurple AD2BF0}} 
+% \end{itemize}
+% for use in figures, etc.
+% According to color.adobe.com this is a colorblind-safe palette.
+%
+% \section{Package options}
+% \DescribeMacro{draft}
+% Adds a message to the title block that the document is a draft.
+% |false| by default.
+%
+% \DescribeMacro{margincite}
+% Whether to print short bibliographic info in the margin on first citation.
+% |true| by default.
+%
+% \DescribeMacro{titlepage}
+% Whether to have a separate title page.
+% |true| by default.
+%
+% \section{Implementation}
+%
+% Set up keys for package options.
+%    \begin{macrocode}
+\RequirePackage{expl3,l3keys2e}
+\keys_define:nn{ sl }
+  {
+    draft .bool_set:N = \g_sl_draft_bool,
+    draft .initial:n = false,
+    draft .default:n = true,
+    margincite .bool_set:N = \g_sl_margincite_bool,
+    margincite .initial:n = true,
+    margincite .default:n = true,
+    titlepage .bool_set:N = \g_sl_titlepage_bool,
+    titlepage .initial:n = true,
+    titlepage .default:n = true,
+  }
+\ProcessKeysOptions{ sl }
+%    \end{macrocode}
+%
+% We use \texttt{article} as a base class.
+%    \begin{macrocode}
+\LoadClass[10pt,oneside]{article}
+%    \end{macrocode}
+%
+% Set page dimensions using the geometry package.
+%    \begin{macrocode}
+\RequirePackage[
+  includeall,
+  marginparwidth=2in,
+  marginparsep=0.25in,
+  width=7.5in,
+  height=9in
+]{geometry}
+%    \end{macrocode}
+%
+% Libertine fonts for body text, Computer Modern for math, and Bera Mono for monospaced text.
+%    \begin{macrocode}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{microtype}
+\RequirePackage{libertine}
+\RequirePackage{beramono}
+%    \end{macrocode}
+%
+% \begin{macro}{colorpalette}
+% A standard set of colors for use in the document.
+%    \begin{macrocode}
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{914E0F}
+\definecolor{link}{HTML}{105C9C}
+\definecolor{slred}{HTML}{FA3F2D}
+\definecolor{slyellow}{HTML}{F08813}
+\definecolor{slgreen}{HTML}{01F556}
+\definecolor{slblue}{HTML}{30A4FF}
+\definecolor{slpurple}{HTML}{AD2BF0}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{macro}{\defemph}
+% We use the standard |\emph| command to handle italicized environments, although we don't use those.
+%    \begin{macrocode}
+\NewDocumentCommand{\defemph}{m}{{\color{accent}\emph{#1}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\note}
+% Use |sidenotes| for margin notes.
+% We define |\@captype| so that other macros can detect if we are inside a float.
+% This is used by other macros to tell if we are inside a figure, table, etc., which is why it's not a \texttt{latex3} variable.
+%    \begin{macrocode}
+\RequirePackage[oneside]{sidenotes}
+\RequirePackage{marginfix}
+\NewDocumentCommand{\note}{m}{
+  \sidenote{
+    \def\@captype{sidenote}
+    \footnotesize #1
+    \undef\@captype
+  }
+}
+%    \end{macrocode}
+%
+% \end{macro}
+% Next we set up headers, footers, and sections, along with their associated TOC entries.
+%    \begin{macrocode}
+\RequirePackage{titletoc}
+\titlecontents{part}[1.5em]
+  {\vspace{2pt}}
+  {\scshape \contentslabel{2.3em}}
+  {\scshape Part }
+  {\titlerule*[1pc]{}\contentspage}[\vspace{2pt}]
+\titlecontents{section}[3.8em] % ie, 1.5em (part) + 2.3em
+  {}
+  {\contentslabel{2.3em}}
+  {\hspace*{-2.3em}}
+  {\titlerule*[1pc]{}\contentspage}
+\titlecontents{subsection}[5.3em] % ie, 3.8em (section) + 2.3em
+  {}
+  {\contentslabel{2.3em}}
+  {\hspace*{-2.3em}}
+  {\titlerule*[1pc]{}\contentspage}
+\titlecontents{subsubsection}[7.6em] % ie, 5.3em (subsection) + 2.3em
+  {}
+  {\contentslabel{2.3em}}
+  {\hspace*{-2.3em}}
+  {\titlerule*[1pc]{}\contentspage}
+
+\RequirePackage[pagestyles]{titlesec}
+\titleformat{\part}{\scshape}{Part \thepart:\@}{.5em}{}
+\titleformat{\section}{\scshape \color{accent}}{\thesection.\@}{.5em}{}
+\titleformat{\subsection}{\itshape \color{accent}}{\thesubsection.\@}{.5em}{}
+\titleformat{\subsubsection}[runin]{\color{accent}}{\thesubsubsection.\@}{.5em}{}
+
+\newpagestyle{main}{
+  \sethead[][][]{\scshape \ifthesection{\thesection.}{}~\sectiontitle}{}{\thepage}
+}
+\pagestyle{main}
+%    \end{macrocode}
+%
+% Use small caps for figure, etc. labels
+%    \begin{macrocode}
+\renewcommand{\descriptionlabel}[1]{\hspace{\labelsep}\scshape{#1}}
+%    \end{macrocode}
+%
+%
+% \begin{macro}{\cite}
+% Set up citations. By default we use a custom version of |alphabetic| that puts mini-citations in the sidebar.
+% There is a package option to turn this off.
+%    \begin{macrocode}
+\bool_if:NTF \g_sl_margincite_bool
+{
+  \RequirePackage[style=alphabetic-side,maxbibnames=5]{biblatex}
+}
+{
+  \RequirePackage[style=alphabetic,maxbibnames=5]{biblatex}
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\declaretheorem}
+% Theorem styles for theorems/lemmas/etc., important theorems (which get their own counters) and defintions/remarks/etc.
+% We need to load |amssymb| to use |\lrcorner|.
+%    \begin{macrocode}
+\RequirePackage{amsthm,amssymb}
+\RequirePackage{thmtools}
+\declaretheoremstyle[
+  headfont=\scshape,
+  qed=$\lrcorner$,
+  parent=section,
+]{theorem}
+\declaretheoremstyle[
+  headfont=\scshape,
+  qed=$\lrcorner$,
+  name='Theorem'
+]{bigtheorem}
+\declaretheoremstyle[
+  headfont=\scshape,
+  parent=section,
+]{definition}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\maketitle}
+% Next we handle the title page and abstract.
+% We add authors one at a time with |\addauthor|, so to match we prefer commands like |\setabstract| and |\settitle| over |\abstract| and |\title|.
+% This makes it easier to add a compatibility layer with |amsart|. 
+%
+% First we have code for defining these variables:
+%    \begin{macrocode}
+\tl_new:N \g_sl_title_tl
+\RenewDocumentCommand{\title}{m}{ \tl_set:Nn \g_sl_title_tl {#1} }
+
+\tl_new:N \g_sl_abstract_tl
+\RenewDocumentEnvironment{ abstract }{ +b }{ \tl_gset:Nn \g_sl_abstract_tl {#1} }{ }
+%    \end{macrocode}
+% Next we deal with the authors.
+% To match |amsart| each invocation adds another author.
+% To better handle omitted |\address| or |\email| commands every invocation of |\author| extends all three arrays, and the other two commands just overwrite the last (blank) entry.
+%    \begin{macrocode}
+\seq_new:N \g_sl_author_seq
+\seq_new:N \g_sl_address_seq
+\seq_new:N \g_sl_email_seq
+\RenewDocumentCommand{\author}{m}{
+  \seq_put_right:Nn \g_sl_author_seq {#1}
+  \seq_put_right:Nn \g_sl_address_seq {}
+  \seq_put_right:Nn \g_sl_email_seq {}
+}
+\NewDocumentCommand{\address}{m}{
+  \seq_set_item:Nnn \g_sl_address_seq {-1} {#1}
+}
+\NewDocumentCommand{\email}{m}{
+  \seq_set_item:Nnn \g_sl_email_seq {-1} {#1}
+}
+%    \end{macrocode}
+%
+% Finally, code for producing the title page.
+% We have some local variables for storing the current author data during our loop.
+%    \begin{macrocode}
+\tl_new:N \l_sl_curr_author_tl
+\tl_new:N \l_sl_curr_address_tl
+\tl_new:N \l_sl_curr_email_tl
+\cs_gset:Nn \g_sl_maketitle: {
+%    \end{macrocode}
+% This is slightly ``clever'' (pejorative) but it seems bad to have two copies of the (somewhat complicated) code defining the title block.
+% Instead we use conditions to turn on and off |titlepage| and the page geometry when a separate title page was requested (the default behavior).
+%    \begin{macrocode}
+  \bool_if:NTF \g_sl_titlepage_bool
+  {
+    \begin{titlepage}
+    \newgeometry{margin=1.5in}
+  }{}
+%    \end{macrocode}
+% Title
+%    \begin{macrocode}
+    \thispagestyle{empty}
+    \parindent=0pt
+    \parskip=12pt
+    { \large \scshape \g_sl_title_tl }
+    \par
+
+%    \end{macrocode}
+% Deal with the authors
+%    \begin{macrocode}
+    \begin{minipage}{\textwidth}
+      \bool_until_do:nn {\seq_if_empty_p:N \g_sl_author_seq} {
+        \seq_pop_left:NN \g_sl_author_seq {\l_sl_curr_author_tl}
+        \seq_pop_left:NN \g_sl_address_seq {\l_sl_curr_address_tl}
+        \seq_pop_left:NN \g_sl_email_seq {\l_sl_curr_email_tl}
+        \l_sl_curr_author_tl
+        \tl_if_empty:NTF \l_sl_curr_address_tl {} {
+          \par
+          {\scshape \l_sl_curr_address_tl}
+        }
+        \tl_if_empty:NTF \l_sl_curr_email_tl {} {
+          \par
+          \href{mailto:\l_sl_curr_email_tl}{\l_sl_curr_email_tl}
+        }
+        \\[10pt]
+      }
+      \vspace{-2em}
+    \end{minipage}
+
+%    \end{macrocode}
+% Abstract. If the variable is empty (because it was not set by the |abstract| environment) don't print anything.
+%    \begin{macrocode}
+
+    \tl_if_empty:NTF \g_sl_abstract_tl {} {
+      \begin{center}
+      \begin{minipage}{4in} 
+      {\centering \scshape \color{accent} Abstract \\ }
+        \g_sl_abstract_tl
+      \end{minipage}
+      \end{center}
+    }
+%    \end{macrocode}
+% When |draft| is enabled, add a message to the title block.
+%    \begin{macrocode}
+    \bool_if:NTF \g_sl_draft_bool {
+      \begin{center}
+        {\color{slred} \large DRAFT:~Not~for~distribution }
+      \end{center}
+    } {}
+%    \end{macrocode}
+% If we have a separate titlepage, need to close the |titlepage| environment.
+%    \begin{macrocode}
+  \bool_if:NTF \g_sl_titlepage_bool
+  {
+    \end{titlepage}
+  }{}
+}
+\RenewDocumentCommand{\maketitle}{}{\g_sl_maketitle:}
+%    \end{macrocode}
+% \end{macro}
+%
+% We conclude with |hyperref| setup.
+%    \begin{macrocode}
+\RequirePackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  citecolor=link,
+  linkcolor=link,
+  menucolor=link,
+  linktocpage=true,
+  urlcolor=link,
+  draft=false
+}
+%    \end{macrocode}
+%
+% \Finale
+\endinput

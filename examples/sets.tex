@@ -1,0 +1,221 @@
+\documentclass[titlepage=false]{sl2art}
+
+\usepackage{mathtools}
+
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+
+\newcommand{\id}{\operatorname{id}}
+
+\newcommand{\defeq}{\mathrel{:=}}
+\newcommand{\iffa}{\Leftrightarrow}
+
+\newcommand{\set}[1]{\left\{ \def\given{\ \middle| \ }  #1 \right\}  }
+
+\usepackage{enumitem}
+\setlist[enumerate]{label={(\alph*)}}
+
+\declaretheorem[style=definition]{definition}
+\declaretheorem[style=definition,sibling=definition]{example}
+
+\title{Sets and functions}
+\author{Calvin McPhail-Snyder}{}
+
+\begin{document}
+\begin{abstract}
+  Here are some reminders on basic concepts related to sets and functions.
+\end{abstract}
+
+\maketitle
+
+\section{Sets}
+Sets are collections of mathematical objects.
+We denote sets with curly braces \(\set{\text{stuff goes here}}\) or \(\set{\text{things}\given\text{such that}}\).
+\begin{example}
+The set of even numbers could be written as
+\begin{gather*}
+  \set{0, 2, -2, 4, -4, \dots}
+  \intertext{or more precisely as}
+  \set{n \in \ZZ \given n = 2k \text{ for some } k \in \ZZ}
+  \intertext{ or }
+  \set{2k \given k \in \ZZ}.
+\end{gather*}
+\end{example}
+Set membership is binary and unordered:
+\[
+  \set{1,2,2} = \set{1,2} = \set{2,1}.
+\]
+That is, there's no specified order to the elements of a set, and you're either in the set or you aren't (an element can't be a member ``twice'').
+
+The symbol \(\in\) means ``is an element of'':
+\[
+  0 \in \ZZ \text{ but } 4/3 \not \in \ZZ.
+\]
+It is \emph{not} the same as \(\subseteq\), which means ``is a subset of'':
+\[
+  \set{1,2} \subseteq \set{1,2,3} \text{ but } \set{1,4} \not \subseteq \set{1,2,3}.
+\]
+More formally, \(A \subseteq B\) if and only if whenever \(x \in A\), \(x \in B\).
+A common trick for proving \(A = B\) for two sets \(A,B\) is to prove that \(A \subseteq B\) and that \(B \subseteq A\).
+
+
+Some commonly used sets:
+\begin{center}
+  \begin{tabular}{c|c}
+    \(\ZZ\) & Integers \(0, 1, -1, 2, -2, \dots\)
+    \\
+    \(\QQ\) & Rational numbers
+    \\
+    \(\mathbb{R}\) & Real numbers (rationals plus things like \(\sqrt 2, \pi\), and \(e\)).
+    \\
+    \(\mathbb{C}\) & Complex numbers \(a + bi\) for \(a, b \in \RR\) and \(i^2 = -1\)
+  \end{tabular}
+\end{center}
+
+We can combine sets using set operations.
+The two most important are intersection and union:
+\begin{gather*}
+  \text{intersection: }
+  A \cap B = \set{x \given x \in A \text{ and } x \in B} 
+  \\
+  \text{union: }
+  A \cup B = \set{x \given x \in A \text{ or } x \in B} 
+\end{gather*}
+For example:
+\begin{gather*}
+  \set{1, 2, 3} \cap \set{1,2,4} = \set{1,2}
+  \\
+  \set{1, 2, 3} \cup \set{1,2,4} = \set{1,2,3,4}
+\end{gather*}
+You can remember these as: \(\cup\) looks like \textbf{u}nion and  \(\cap\) looks like i\textbf{n}tersection.
+
+Another way to combine two sets that results in a new type of set is the \defemph{Cartesian product}, the set of ordered pairs
+\[
+  A \times B = \set{(a,b) \given a \in A \text{ and } b \in B}.
+\]
+For example,
+\[
+  \set{1,2} \times \set{\pi, e}
+  =
+  \set{(1,\pi), (1,e), (2, \pi), (2, e)}
+  \qedhere
+\]
+This is where the notation \(\RR^{n}\) comes from: the idea is that
+\[
+  \RR^{n} = \underbrace{\RR \times \RR \times \cdots \times \RR}_{n \text{ factors}}
+\]
+
+Sometimes we also use the \defemph{set difference}
+\[
+  A \setminus B = \set{a \in a \given a \not \in B}.
+\]
+For example, \(\RR \setminus \set{0}\) is the set of nonzero real numbers.
+
+\begin{example}
+  We can use sets to express mathematical concepts.
+  For example, these statements are equivalent:
+  \begin{enumerate}
+    \item Any number divisible by both \(2\) and \(3\) is divisible by \(6\).
+    \item For any whole number \(k\), write \(k\ZZ = \set{0, k, -k, 2k, -2k, \dots} = \set{km \given m \in \ZZ}\) for the set of multiples of \(k\).
+      Then
+      \[
+        2\ZZ \cap 3\ZZ = 6\ZZ.
+      \]
+  \end{enumerate}
+  While we needed to introduce some notation to describe \(k\ZZ\), once we did we could write the whole sentence in part (1) as the single equation \(2 \ZZ \cap 3 \ZZ= 6 \ZZ\).
+\end{example}
+Here we see again that \(\cap\) (intersection) is related to logical {\scshape and}.
+In this context, it is useful to use the \defemph{empty set} \(\emptyset\), which is the unique set with no elements:
+\[
+  \set{1,3} \cap \set{2,4} = \emptyset.
+\]
+We can say that two sets \(A,B\) have no elements in common by writing \(A \cap B = \emptyset\), as above.
+
+\section{Functions}
+\begin{definition}
+  A function \(f : X \to Y\) is a rule%
+  \note{We can formalize this by saying that a function is a special subset of \(A \times B\).}
+  assigning every \(a \in X\) an element \(f(a) \in Y\).
+  We call \(X\) the \defemph{domain} of \(f\) and \(Y\) the \defemph{codomain} of \(f\).
+  The \defemph{image} of \(f\) is the set of all values it takes:
+  \[
+    f(X) = \set{y \in Y \given f(x) = y \text{ for some } x \in X}.
+  \]
+  Notice that \(f(X) \subseteq Y\), but in general \(f(X)\) need not be equal to \(Y\).
+
+  We write \(g \circ f\) or just \(gf\) for the \defemph{composition} of functions:
+  If \(f : X \to Y\) and \(g : Y \to Z\), then \(gf : X \to Z\) is given by
+  \[
+    (gf)(x) = g(f(x)).
+  \]
+  For any set \(X\), the \defemph{identity function} \(\id_X : X \to X\) is given by
+  \[
+    \id_{X}(x) = x \text{ for all } x \in X
+  \]
+  We have \(\id_Y \circ f = f\) and \(f \circ \id_X = f\).
+\end{definition}
+
+\begin{definition}
+  Let \(f : X \to Y\) be a function.
+  For any subset \(A \subseteq X\), the \defemph{image} of \(A\) is
+  \[
+    f(A) = \set{y \in Y \given f(x) = y \text{ for some } x \in A},
+  \]
+  so the image of \(f\) is just the image of its domain.
+  In parallel, for any \(B \subseteq Y\), the \defemph{preimage} of \(B\) is%
+  \note{
+    This notation conflicts somewhat with the usual notation for inverses, so be careful.
+  }
+  \[
+    f^{-1}(B) = \set{x \in X \given f(x) \in B}.
+  \]
+\end{definition}
+\begin{example}
+  Define \(f : \RR \to \RR\) by \(f(x) = x^2\).
+  Then \(f\) has domain and codomain \(\RR\), but its image is
+  \[
+    f(\RR) = [0,\infty) = \set{x \in \RR \given 0 \le x }.
+  \]
+  The image of \([-1,1] = \set{x \in \RR \given -1 \le x \le 1}\) is
+  \[
+    f([-1,1]) = [0,1]
+  \]
+  and the preimage of \([-2,2]\) is
+  \[
+    f^{-1}([-2,2]) = [-\sqrt 2, \sqrt 2].
+  \]
+  Similarly \(f^{-1}([-2,-1]) = \emptyset\).
+\end{example}
+
+\begin{definition}
+  A function \(f : X \to Y\) is
+  \begin{itemize}
+    \item \defemph{injective} or  \defemph{one-to-one} if whenever \(f(x_1) = f(x_2)\), \(x_1 = x_2\).
+    \item  \defemph{surjective} or \defemph{onto} if for every \(y \in Y\) there is an \(x \in X\) with \(f(x) = y\).
+    \item \defemph{bijective} if it is both injective and surjective.\note{Sometimes \(f\) is called a \defemph{one-to-one correspondence} in this case, but I think this is easy to confuse with being one-to-one/injective, so I avoid this term.}
+      Equivalently, \(f\) is bijective if and only if there is an \defemph{inverse} \(f^{-1} : Y \to X\) with
+      \[
+        f\circ f^{-1} = \id_Y \text{ and } f^{-1} \circ f = \id_X.
+      \]
+  \end{itemize}
+\end{definition}
+We can think about this in terms of equations:
+\begin{itemize}
+  \item If \(f\) is injective, then whenever a solution \(x\in X\) to \(f(x) = y\) exists, it is unique.
+  \item If \(f\) is surjective, then a solution \(x\in X\) to \(f(x) = y\) exists for every \(y \in Y\).
+  \item If \(f\) is bijective, then for every \(y \in Y\) there is a unique \(x \in X\) with \(f(x) = y\).
+\end{itemize}
+\begin{example}
+  \begin{enumerate}
+    \item The function \(f : \RR \to \RR\) given by \(f(x) = x^2\) is neither injective nor surjective.
+    \item The function \(g : \RR \to [0, \infty), g(x) = x^2\)  is surjective but not injective.
+    \item The function \(h : [0,\infty) \to \RR, h(x) = x^2\) is injective but  not surjective.
+    \item The function \(k : [0,\infty) \to [0,\infty), k(x) = x^2\) is bijective.
+      Its inverse is \(k^{-1}(x) = \sqrt{x}\).\qedhere
+  \end{enumerate}
+\end{example}
+
+\end{document}
