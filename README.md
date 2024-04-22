@@ -18,5 +18,6 @@ Put
 * `alphabetic-side.bbx`
 * `alphabetic-side.cbx`
 * `sl2art.cls`
+
 in the same directory as your source file.
 You can also put these in your local TeX installation if you are willing to deal with the TeX directory structure.
