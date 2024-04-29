@@ -392,11 +392,11 @@
 %    \begin{macrocode}
   \bool_if:NTF \g_sl_titlepage_bool {\vfill}{\par}
   \tl_if_empty:NTF \g_sl_subjclass_tl {} {
-    {\itshape {\g_sl_subjclassYear_tl}~Mathematics~Subject~Classification:}
-    ~\g_sl_subjclass_tl
+    {\itshape {\g_sl_subjclassYear_tl}~Mathematics~Subject~Classification:~}
+    \g_sl_subjclass_tl
     \par
   }
-  \tl_if_empty:NTF \g_sl_keywords_tl {} {{\itshape Keywords:}~ \g_sl_keywords_tl }
+  \tl_if_empty:NTF \g_sl_keywords_tl {} {{\itshape Key~words~and~phrases:}~ \g_sl_keywords_tl }
 %    \end{macrocode}
 % Change pagaraph spacing back to default (if we don't do this manually it causes problems when there isn't a title page).
 % If we have a separate titlepage we also need to close the |titlepage| environment.
