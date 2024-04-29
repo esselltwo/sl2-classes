@@ -21,7 +21,7 @@
 \ProvidesFile{sl2art.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<class>\ProvidesExplClass{sl2art}{2024-02-12}{v0.1}{a one-and-a-half-column article class for mathematics}
+%<class>\ProvidesExplClass{sl2art}{2024-04-28}{v0.2}{a one-and-a-half-column article class for mathematics}
 %
 %<*driver>
 \documentclass{ltxdoc}
@@ -34,15 +34,13 @@
 %</driver>
 % \fi
 %
-% \changes{v0.1}{2024-02-12}{Initial version}
+% \changes{v0.1}{2024-04-22}{Initial version}
 %
 % \GetFileInfo{sl2art.dtx}
 %
 % \parskip=12pt
 %
-% \title{The \textsf{sl2art} class\thanks{This document
-%   corresponds to \textsf{sl2art}~\fileversion,
-%   dated \filedate.}}
+% \title{The \textsf{sl2art} class}
 % \author{Calvin McPhail-Snyder \\ \texttt{calvin@sl2.site}}
 %
 % \maketitle
@@ -57,6 +55,8 @@
 % It is probably easiest to see how to use this class by looking at some of the example files; |example.tex| talks more about design choices.
 %   This class is not particularly customizable, since the goal was to make a class for how I like to do things.
 %   However, you are welcome to use it as a starting point for creating your own styles.
+%
+% \PrintChanges
 % 
 % \section{Usage}
 %
@@ -279,13 +279,21 @@
 %
 % \begin{macro}{\maketitle}
 % Next we handle the title page and abstract.
-% We add authors one at a time with |\addauthor|, so to match we prefer commands like |\setabstract| and |\settitle| over |\abstract| and |\title|.
-% This makes it easier to add a compatibility layer with |amsart|. 
-%
-% First we have code for defining these variables:
+% First we have code for defining the title, subject class, keywords, and abstract (which is an enviornment to match |amsart|)
+% \changes{v0.2}{2024-04-28}{Add subject class and keyword support}
 %    \begin{macrocode}
 \tl_new:N \g_sl_title_tl
 \RenewDocumentCommand{\title}{m}{ \tl_set:Nn \g_sl_title_tl {#1} }
+
+\tl_new:N \g_sl_subjclass_tl
+\tl_new:N \g_sl_subjclassYear_tl
+\NewDocumentCommand{\subjclass}{O{2020} m}{ 
+  \tl_set:Nn \g_sl_subjclass_tl {#2} 
+  \tl_set:Nn \g_sl_subjclassYear_tl {#1} 
+}
+
+\tl_new:N \g_sl_keywords_tl
+\NewDocumentCommand{\keywords}{m}{ \tl_set:Nn \g_sl_keywords_tl {#1} }
 
 \tl_new:N \g_sl_abstract_tl
 \RenewDocumentEnvironment{ abstract }{ +b }{ \tl_gset:Nn \g_sl_abstract_tl {#1} }{ }
@@ -316,11 +324,12 @@
 \tl_new:N \l_sl_curr_author_tl
 \tl_new:N \l_sl_curr_address_tl
 \tl_new:N \l_sl_curr_email_tl
-\cs_gset:Nn \g_sl_maketitle: {
+\cs_gset:Nn \g_sl_maketitle:
 %    \end{macrocode}
 % This is slightly ``clever'' (pejorative) but it seems bad to have two copies of the (somewhat complicated) code defining the title block.
 % Instead we use conditions to turn on and off |titlepage| and the page geometry when a separate title page was requested (the default behavior).
 %    \begin{macrocode}
+{
   \bool_if:NTF \g_sl_titlepage_bool
   {
     \begin{titlepage}
@@ -378,8 +387,20 @@
       \end{center}
     } {}
 %    \end{macrocode}
-% If we have a separate titlepage, need to close the |titlepage| environment.
+% Add MSC and keywords. If there's a title page, these go at the bottom (so there's a |\vfill|); if not we have a small break instead.
 %    \begin{macrocode}
+  \bool_if:NTF \g_sl_titlepage_bool {\vfill}{\par}
+  \tl_if_empty:NTF \g_sl_subjclass_tl {} {
+    {\itshape {\g_sl_subjclassYear_tl}~Mathematics~Subject~Classification:}
+    ~\g_sl_subjclass_tl
+    \par
+  }
+  \tl_if_empty:NTF \g_sl_keywords_tl {} {{\itshape Keywords:}~ \g_sl_keywords_tl }
+%    \end{macrocode}
+% Change pagaraph spacing back to default (if we don't do this manually it causes problems when there isn't a title page).
+% If we have a separate titlepage we also need to close the |titlepage| environment.
+%    \begin{macrocode}
+  \parskip=0pt
   \bool_if:NTF \g_sl_titlepage_bool
   {
     \end{titlepage}
