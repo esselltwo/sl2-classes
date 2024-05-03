@@ -154,11 +154,12 @@
 %    \end{macrocode}
 %
 % Libertine fonts for body text, Computer Modern for math, and Bera Mono for monospaced text.
+% Bera Mono is scaled to 80\% to better match the other fonts.
 %    \begin{macrocode}
 \RequirePackage[T1]{fontenc}
 \RequirePackage{microtype}
 \RequirePackage{libertine}
-\RequirePackage{beramono}
+\RequirePackage[scale=0.80]{beramono}
 %    \end{macrocode}
 %
 % \begin{macro}{colorpalette}
@@ -401,11 +402,12 @@
 % Change pagaraph spacing back to default (if we don't do this manually it causes problems when there isn't a title page).
 % If we have a separate titlepage we also need to close the |titlepage| environment.
 %    \begin{macrocode}
-  \parskip=0pt
   \bool_if:NTF \g_sl_titlepage_bool
   {
     \end{titlepage}
   }{}
+  \parskip=0pt
+  \parindent=1.5em
 }
 \RenewDocumentCommand{\maketitle}{}{\g_sl_maketitle:}
 %    \end{macrocode}
