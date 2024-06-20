@@ -21,7 +21,7 @@
 \ProvidesFile{sl2art.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<class>\ProvidesExplClass{sl2art}{2024-04-28}{v0.2}{a one-and-a-half-column article class for mathematics}
+%<class>\ProvidesExplClass{sl2art}{2024-04-28}{v0.3}{a one-and-a-half-column article class for mathematics}
 %
 %<*driver>
 \documentclass{ltxdoc}
@@ -200,7 +200,9 @@
 %    \end{macrocode}
 %
 % \end{macro}
+% \begin{macro}{sectioning}
 % Next we set up headers, footers, and sections, along with their associated TOC entries.
+% \changes{v0.3}{2024-03-20}{Bugfix: stop title color from running into margin in certain cases}
 %    \begin{macrocode}
 \RequirePackage{titletoc}
 \titlecontents{part}[1.5em]
@@ -226,15 +228,16 @@
 
 \RequirePackage[pagestyles]{titlesec}
 \titleformat{\part}{\scshape}{Part \thepart:\@}{.5em}{}
-\titleformat{\section}{\scshape \color{accent}}{\thesection.\@}{.5em}{}
-\titleformat{\subsection}{\itshape \color{accent}}{\thesubsection.\@}{.5em}{}
-\titleformat{\subsubsection}[runin]{\color{accent}}{\thesubsubsection.\@}{.5em}{}
+\titleformat{\section}{\scshape }{\color{accent} \thesection.\@}{.5em}{\color{accent}}
+\titleformat{\subsection}{\itshape }{\color{accent} \thesubsection.\@}{.5em}{\color{accent}}
+\titleformat{\subsubsection}[runin]{}{\color{accent} \thesubsubsection.\@}{.5em}{\color{accent}}
 
 \newpagestyle{main}{
   \sethead[][][]{\scshape \ifthesection{\thesection.}{}~\sectiontitle}{}{\thepage}
 }
 \pagestyle{main}
 %    \end{macrocode}
+% \end{macro}
 %
 % Use small caps for figure, etc. labels
 %    \begin{macrocode}
