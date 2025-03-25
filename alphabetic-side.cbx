@@ -24,7 +24,7 @@
 
 \newbibmacro*{addfoot}{%
   \@ifundefined{@captype}{%
-  \marginpar{\footnotesize [\usebibmacro{cite}] \printnames[init-family]{author}, \usebibmacro{title} \printfield[shortarXiv]{eprint} \printfield[shortdoi]{doi}}%
+          \marginpar{\footnotesize [\usebibmacro{cite}] \printnames[init-family]{author}, \usebibmacro{title} \printfield{pubstate} \printfield[shortarXiv]{eprint} \printfield[shortdoi]{doi}}%
   }{}%
 }
 
