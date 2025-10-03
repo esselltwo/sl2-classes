@@ -284,11 +284,13 @@
 %
 % \begin{macro}{\maketitle}
 % Next we handle the title page and abstract.
-% First we have code for defining the title, subject class, keywords, and abstract (which is an enviornment to match |amsart|)
+% First we have code for defining the title, subject class, keywords, and abstract (which is an enviornment to match |amsart|).
+% |\title| has an optional argument to gracefully handle optional short titles like in |amsart|.
+% Right now we don't use it for anything.
 % \changes{v0.2}{2024-04-28}{Add subject class and keyword support}
 %    \begin{macrocode}
 \tl_new:N \g_sl_title_tl
-\RenewDocumentCommand{\title}{m}{ \tl_set:Nn \g_sl_title_tl {#1} }
+\RenewDocumentCommand{\title}{o m}{ \tl_set:Nn \g_sl_title_tl {#2} }
 
 \tl_new:N \g_sl_subjclass_tl
 \tl_new:N \g_sl_subjclassYear_tl
