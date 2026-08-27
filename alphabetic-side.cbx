@@ -36,3 +36,25 @@
   }
   {\multicitedelim}
   {\usebibmacro{postnote}}
+
+\renewbibmacro*{textcite}{%
+  \iffieldequals{namehash}{\cbx@lasthash}
+    {\setunit{\multicitedelim}}
+    {\ifnameundef{labelname}
+       {\printfield[citetitle]{labeltitle}}
+       {\printnames{labelname}}%
+     \setunit{%
+       \global\booltrue{cbx:parens}%
+       \printdelim{namelabeldelim}\bibopenbracket}%
+     \stepcounter{textcitecount}%
+     \savefield{namehash}{\cbx@lasthash}}%
+  \ifnumequal{\value{citecount}}{1}
+    {\usebibmacro{prenote}}
+    {}%
+  \usebibmacro{cite}%
+  \ifciteseen{}{\usebibmacro{addfoot}}%
+  \setunit{%
+    \ifbool{cbx:parens}
+      {\bibclosebracket\global\boolfalse{cbx:parens}}
+      {}%
+    \textcitedelim}}
