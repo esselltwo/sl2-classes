@@ -20,8 +20,8 @@
 %<*driver>
 \ProvidesFile{sl2art.dtx}
 %</driver>
-%<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<class>\ProvidesExplClass{sl2art}{2024-04-28}{v0.3}{a one-and-a-half-column article class for mathematics}
+%<class>\NeedsTeXFormat{LaTeX2e}[2025-03-01]
+%<class>\ProvidesExplClass{sl2art}{2026-09-16}{v1.0}{a one-and-a-half-column article class for mathematics}
 %
 %<*driver>
 \documentclass{ltxdoc}
@@ -36,6 +36,7 @@
 % \fi
 %
 % \changes{v0.1}{2024-04-22}{Initial version}
+% \changes{v1.0}{2026-09-16}{Use keytheorems for theorem-like environments}
 %
 % \GetFileInfo{sl2art.dtx}
 %
@@ -77,13 +78,12 @@
 % These should be at most 2in wide to fit.
 % One can also use |\margintable| for tables.
 %
-% \DescribeMacro{\declaretheorem}
-% We use |thmtools| for creating theorem-like environments.
-% By default there are three styles.
+% \DescribeMacro{\newkeytheorem}
+% We use |keytheorems| for creating theorem-like environments.
+% By default there are two styles.
 % |theorem| and |definition| are almost identical, but |theorem| uses a \(\lrcorner\) to indicate the end of the theorem (since we \emph{don't} use italicized text for theorem statements).
 % The intent is |theorem| for theorems, lemmas, etc. and |definition| for definitions, remarks, and examples.
 % Both are numbered by section.
-% |bigtheorem| is identical to |theorem| but by default has its own global numbering; the idea is that major results are just "Theorem 1, Theorem 2" and so on.
 %
 % \definecolor{accent}{HTML}{914E0F}
 % \definecolor{link}{HTML}{105C9C}
@@ -259,26 +259,21 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\declaretheorem}
+% \begin{macro}{theoremstyles}
 % Theorem styles for theorems/lemmas/etc., important theorems (which get their own counters) and defintions/remarks/etc.
 % We need to load |amssymb| to use |\lrcorner|.
 %    \begin{macrocode}
-\RequirePackage{amsthm,amssymb}
-\RequirePackage{thmtools}
-\declaretheoremstyle[
-  headfont=\scshape,
-  qed=$\lrcorner$,
-  parent=section,
-]{theorem}
-\declaretheoremstyle[
-  headfont=\scshape,
-  qed=$\lrcorner$,
-  name='Theorem'
-]{bigtheorem}
-\declaretheoremstyle[
-  headfont=\scshape,
-  parent=section,
-]{definition}
+\RequirePackage{amssymb}
+\RequirePackage{keytheorems}
+\newkeytheoremstyle{theorem}{
+  inherit-style = definition,
+  headfont = \scshape,
+  qed = $\lrcorner$,
+}
+\renewkeytheoremstyle{definition}{
+  inherit-style = definition,
+  headfont = \scshape,
+}
 %    \end{macrocode}
 % \end{macro}
 %

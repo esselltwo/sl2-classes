@@ -20,8 +20,8 @@
 %<*driver>
 \ProvidesFile{sl2ams.dtx}
 %</driver>
-%<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<class>\ProvidesExplClass{sl2ams}{2024-02-12}{v0.1}{a compatibility layer for using AMS article style}
+%<class>\NeedsTeXFormat{LaTeX2e}[2025-03-01]
+%<class>\ProvidesExplClass{sl2ams}{2026-09-16}{v1.0}{a compatibility layer for AMS article style from sl2art documents}
 %
 %<*driver>
 \documentclass{ltxdoc}
@@ -35,6 +35,7 @@
 % \fi
 %
 % \changes{v0.1}{2024-02-12}{Initial version}
+% \changes{v1.0}{2026-09-16}{Use keytheorems for theorem-like environments}
 %
 % \GetFileInfo{sl2ams.dtx}
 %
@@ -119,37 +120,20 @@
 \RequirePackage[style=numeric]{biblatex}
 %    \end{macrocode}
 %
-% Theorem styles imitating the AMS theorem styles.
+% \begin{macro}{theoremstyles}
+% Theorem styles matching the AMS theorem styles.
 % We go ahead and load |mathtools| (and some related math packages) because it needs to be loaded before |cleveref| and for the intended use of this class you'd want it loaded anyway.
 %    \begin{macrocode}
-\RequirePackage{amsthm,amssymb,mathtools}
-\RequirePackage{thmtools}
-\declaretheoremstyle[
-  spaceabove=\topsep,
-  spacebelow=\topsep,
-  bodyfont=\itshape,
-  headfont=\bfseries,
-  headpunct={.},
-  postheadspace={5pt plus 1pt minus 1pt},
-  parent=section,
-]{theorem}
-\declaretheoremstyle[
-  spaceabove=\topsep,
-  spacebelow=\topsep,
-  bodyfont=\itshape,
-  headfont=\bfseries,
-  headpunct={.},
-  postheadspace={5pt plus 1pt minus 1pt},
-]{bigtheorem}
-\declaretheoremstyle[
-  spaceabove=\topsep,
-  spacebelow=\topsep,
-  headfont=\bfseries,
-  headpunct={.},
-  postheadspace={5pt plus 1pt minus 1pt},
-  parent=section,
-]{definition}
+\RequirePackage{amssymb,mathtools}
+\RequirePackage{keytheorems}
+\newkeytheoremstyle{theorem}{
+  inherit-style = plain,
+}
+\renewkeytheoremstyle{definition}{
+  inherit-style = definition,
+}
 %    \end{macrocode}
+% \end{macro}
 %
 % We conclude with |hyperref| and |cleveref| setup.
 %    \begin{macrocode}
