@@ -1,7 +1,9 @@
-\documentclass[margincite]{sl2ams}
+%\documentclass[titlepage=false]{sl2art}
+\documentclass{sl2ams}
 
 \usepackage{lipsum}
 \usepackage{verbatim}
+\usepackage{mathtools}
 
 \usepackage{graphicx}
 \graphicspath{{fig/}}
@@ -10,27 +12,28 @@
 \newkeytheorem{definition}[style=definition,sibling=proposition]
 
 \title{sl2art, a one-and-a-half-column document class}
-\author{Calvin McPhail-Snyder \and Buddy the Dog}{}
-\contact{calvin@esselltwo.com}{www.esselltwo.com}
-%\address{UC Berkeley Department of Mathematics}
-%\email{blah@example.com}
-%\address{My House}
-%\email{iam@adog.com}
-%\subjclass{foobar}
+\author{Calvin McPhail-Snyder}
+\address{Duke University, Department of Mathematics}
+\email{calvin@sl2.site}
+
+\subjclass[2020]{XYZ123}
+\keywords{documents}
 
 
 \addbibresource{sources.bib}
 
 \begin{document}
 
-\abstract{
+\begin{abstract}
   Recently there has been a lot of interest in ``widemargin'' or ``one point five column'' documents, which use a narrow text block (for readability) and a wide margin for sidenotes, figures, and citations.
 \texttt{sl2art} is a document class implementing many of these ideas, based on my PhD thesis design.
-}
-
+\end{abstract}
 
 \maketitle
 \tableofcontents
+
+Here you can see the same document as \texttt{example.tex} but formatted just like it was in an American Mathematical Society journal.
+This can be useful for submission to journals, who sometimes have formatting expectations or ask for things in \texttt{amsart} for length comparison purposes.
 
 \section{Design choices}
 
@@ -46,13 +49,11 @@ In particular, my text block is somewhat wider than that of \texttt{tufte-articl
 
 \subsection{Title page}
 I like separate title pages, even for articles.
-Right now the author macro is rather primitive and doesn't handle affiliations.
-Since affiliations are most important for journal articles, and journals have their own style formats, changing this is not a high priority.
-I have included a contact field.
+Currently there is support for author names, addresses (i.e.\@ affiliations unless you really want to list a postal address) and emails.
+You can also specify MSC classes and keywords, which are printed at the bottom of the title page (or below the abstract if the title page is turned off).
 
 \subsection{Fonts and colors}
-The default is to use Palantino for text and Euler for math.
-If you prefer Computer Modern, there is an option for that.
+The default is to use Libertine for text and Computer Modern for math.
 Here is some math:
 \begin{align*}
   \int_{0}^{\infty} t^{n} e^{-t} dt
@@ -75,24 +76,23 @@ You can change it by re-defining the color {\color{accent} \texttt{accent}}.
 All hyperlinks (internal and external) are in {\color{link} \texttt{link}}.%
 \note{
 It is sometimes considered good practice to use a different color for internal and external links, but I had trouble picking two that didn't look bad together.
-Maybe someone has an idea!.
+Maybe someone has an idea!
 }
 
 For diagrams or colorful equations, there is a default color palette:
 \begin{center}
   \begin{tabular}{ccccc}
-    {\color{red} red} 
+    {\color{slred} red} 
     &
-    {\color{yellow} yellow}
+    {\color{slyellow} yellow}
     &
-    {\color{green} green}
+    {\color{slgreen} green}
     &
-    {\color{blue} blue} 
+    {\color{slblue} blue} 
     &
-    {\color{purple} purple} 
+    {\color{slpurple} purple} 
   \end{tabular}
 \end{center}
-If this clashes with a package, you can disable it with an option.
 According to an online tool I found, these should be distinguishable even for colorblind readers, but I have not tested this yet.\note{If you have trouble telling these apart, let me know!}
 
 \section{Features}
@@ -137,8 +137,26 @@ Unfortunately this requires some manual placement: I don't know a way to get wid
   \label{fig:wide-fig-example}
 \end{figure*}
 
+\subsection{Theorems}
+There is essentially one default theorem style, which looks like this:
+\begin{proposition}
+  Every nontrivial zero of the Riemann zeta function, the analytic continuation of
+  \[
+    \zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}
+  \]
+  has imaginary part \(1/2\).
+\end{proposition}
+There are also definitions, which don't have an end-of-statement symbol:
+
+\begin{definition}
+  A topological space \(X\) is \defemph{connected} if the only clopen sets are \(X\) and \(\emptyset\).
+\end{definition}
+
+
+
 \section{Citations}
-Citations are bracketed in the text \cite{Graham1994} to match math conventions, but also go in the margin the first time they are referenced in each section; when referenced later \cite{Graham1994} in the same section they do not produce a marginal paragraph.%
+Citations are bracketed in the text \cite{Graham1994} to match math conventions, but also go in the margin the first time they are referenced; when referenced later \cite{Graham1994} they do not produce a marginal paragraph.
+It should work for \texttt{\textbackslash{}cite} and \texttt{\textbackslash{}textcite} but I have not implemented it for any other citation commands.
 This behavior is handled by the \texttt{margincite} option.
 
 
