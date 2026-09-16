@@ -1,7 +1,14 @@
 # sl2-classes
-`sl2art.cls` is a document class for writing mathematics. 
+`sl2art.cls` is a document class for writing mathematics.
 It is "one point five column": there is a narrow text block (for readability) and a wide margin for sidenotes, figures, and citations.
 Build `examples/example.tex` for more information and to see how to use the class in practice.
+
+The classes use the `keytheorems` package for theorem-like environments. For example:
+
+```latex
+\newkeytheorem{proposition}[style=theorem,parent=section]
+\newkeytheorem{definition}[style=definition,sibling=proposition]
+```
 
 `sl2ams.cls` is a compatibility layer: given the source of a `sl2art.cls` it produces a document styled like `amsart`.
 This can be useful for length comparison or for some journal submissions.

@@ -21,7 +21,7 @@
 \ProvidesFile{sl2art.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}[2023-11-01]
-%<class>\ProvidesExplClass{sl2art}{2024-04-28}{v0.3}{a one-and-a-half-column article class for mathematics}
+%<class>\ProvidesExplClass{sl2art}{2026-09-16}{v0.4}{a one-and-a-half-column article class for mathematics}
 %
 %<*driver>
 \documentclass{ltxdoc}
@@ -36,6 +36,7 @@
 % \fi
 %
 % \changes{v0.1}{2024-04-22}{Initial version}
+% \changes{v0.4}{2026-09-16}{Use keytheorems for theorem-like environments}
 %
 % \GetFileInfo{sl2art.dtx}
 %
@@ -77,8 +78,8 @@
 % These should be at most 2in wide to fit.
 % One can also use |\margintable| for tables.
 %
-% \DescribeMacro{\declaretheorem}
-% We use |thmtools| for creating theorem-like environments.
+% \DescribeMacro{\newkeytheorem}
+% We use |keytheorems| for creating theorem-like environments.
 % By default there are three styles.
 % |theorem| and |definition| are almost identical, but |theorem| uses a \(\lrcorner\) to indicate the end of the theorem (since we \emph{don't} use italicized text for theorem statements).
 % The intent is |theorem| for theorems, lemmas, etc. and |definition| for definitions, remarks, and examples.
@@ -259,26 +260,23 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\declaretheorem}
+% \begin{macro}{\newkeytheorem}
 % Theorem styles for theorems/lemmas/etc., important theorems (which get their own counters) and defintions/remarks/etc.
 % We need to load |amssymb| to use |\lrcorner|.
 %    \begin{macrocode}
-\RequirePackage{amsthm,amssymb}
-\RequirePackage{thmtools}
-\declaretheoremstyle[
-  headfont=\scshape,
-  qed=$\lrcorner$,
-  parent=section,
-]{theorem}
-\declaretheoremstyle[
-  headfont=\scshape,
-  qed=$\lrcorner$,
-  name='Theorem'
-]{bigtheorem}
-\declaretheoremstyle[
-  headfont=\scshape,
-  parent=section,
-]{definition}
+\RequirePackage{amssymb}
+\RequirePackage{keytheorems}
+\newkeytheoremstyle{theorem}{
+  headfont = \scshape,
+  qed = $\lrcorner$,
+}
+\newkeytheoremstyle{bigtheorem}{
+  headfont = \scshape,
+  qed = $\lrcorner$,
+}
+\newkeytheoremstyle{definition}{
+  headfont = \scshape,
+}
 %    \end{macrocode}
 % \end{macro}
 %

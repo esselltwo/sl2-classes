@@ -6,8 +6,8 @@
 \usepackage{graphicx}
 \graphicspath{{fig/}}
 
-\declaretheorem[style=theorem]{proposition}
-\declaretheorem[style=definition,sibling=proposition]{definition}
+\newkeytheorem{proposition}[style=theorem,parent=section]
+\newkeytheorem{definition}[style=definition,sibling=proposition]
 
 \title{sl2art, a one-and-a-half-column document class}
 \author{Calvin McPhail-Snyder \and Buddy the Dog}{}

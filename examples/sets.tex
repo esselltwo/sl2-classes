@@ -18,8 +18,8 @@
 \usepackage{enumitem}
 \setlist[enumerate]{label={(\alph*)}}
 
-\declaretheorem[style=definition]{definition}
-\declaretheorem[style=definition,sibling=definition]{example}
+\newkeytheorem{definition}[style=definition,parent=section]
+\newkeytheorem{example}[style=definition,sibling=definition]
 
 \title{Sets and functions}
 \author{Calvin McPhail-Snyder}{}
