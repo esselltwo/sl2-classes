@@ -120,6 +120,7 @@
 \RequirePackage[style=numeric]{biblatex}
 %    \end{macrocode}
 %
+% \begin{macro}{theoremstyles}
 % Theorem styles imitating the AMS theorem styles.
 % We go ahead and load |mathtools| (and some related math packages) because it needs to be loaded before |cleveref| and for the intended use of this class you'd want it loaded anyway.
 %    \begin{macrocode}
@@ -133,15 +134,7 @@
   headpunct = {.},
   postheadspace = {5pt plus 1pt minus 1pt},
 }
-\newkeytheoremstyle{bigtheorem}{
-  spaceabove = \topsep,
-  spacebelow = \topsep,
-  bodyfont = \itshape,
-  headfont = \bfseries,
-  headpunct = {.},
-  postheadspace = {5pt plus 1pt minus 1pt},
-}
-\newkeytheoremstyle{definition}{
+\renewkeytheoremstyle{definition}{
   spaceabove = \topsep,
   spacebelow = \topsep,
   headfont = \bfseries,
@@ -149,6 +142,7 @@
   postheadspace = {5pt plus 1pt minus 1pt},
 }
 %    \end{macrocode}
+% \end{macro}
 %
 % We conclude with |hyperref| and |cleveref| setup.
 %    \begin{macrocode}

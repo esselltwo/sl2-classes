@@ -80,11 +80,10 @@
 %
 % \DescribeMacro{\newkeytheorem}
 % We use |keytheorems| for creating theorem-like environments.
-% By default there are three styles.
+% By default there are two styles.
 % |theorem| and |definition| are almost identical, but |theorem| uses a \(\lrcorner\) to indicate the end of the theorem (since we \emph{don't} use italicized text for theorem statements).
 % The intent is |theorem| for theorems, lemmas, etc. and |definition| for definitions, remarks, and examples.
 % Both are numbered by section.
-% |bigtheorem| is identical to |theorem| but by default has its own global numbering; the idea is that major results are just "Theorem 1, Theorem 2" and so on.
 %
 % \definecolor{accent}{HTML}{914E0F}
 % \definecolor{link}{HTML}{105C9C}
@@ -260,7 +259,7 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\newkeytheorem}
+% \begin{macro}{theoremstyles}
 % Theorem styles for theorems/lemmas/etc., important theorems (which get their own counters) and defintions/remarks/etc.
 % We need to load |amssymb| to use |\lrcorner|.
 %    \begin{macrocode}
@@ -270,11 +269,7 @@
   headfont = \scshape,
   qed = $\lrcorner$,
 }
-\newkeytheoremstyle{bigtheorem}{
-  headfont = \scshape,
-  qed = $\lrcorner$,
-}
-\newkeytheoremstyle{definition}{
+\renewkeytheoremstyle{definition}{
   headfont = \scshape,
 }
 %    \end{macrocode}
