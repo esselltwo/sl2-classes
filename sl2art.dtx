@@ -266,10 +266,12 @@
 \RequirePackage{amssymb}
 \RequirePackage{keytheorems}
 \newkeytheoremstyle{theorem}{
+  inherit-style = definition,
   headfont = \scshape,
   qed = $\lrcorner$,
 }
 \renewkeytheoremstyle{definition}{
+  inherit-style = definition,
   headfont = \scshape,
 }
 %    \end{macrocode}

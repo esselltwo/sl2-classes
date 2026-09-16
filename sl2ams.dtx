@@ -121,25 +121,16 @@
 %    \end{macrocode}
 %
 % \begin{macro}{theoremstyles}
-% Theorem styles imitating the AMS theorem styles.
+% Theorem styles matching the AMS theorem styles.
 % We go ahead and load |mathtools| (and some related math packages) because it needs to be loaded before |cleveref| and for the intended use of this class you'd want it loaded anyway.
 %    \begin{macrocode}
 \RequirePackage{amssymb,mathtools}
 \RequirePackage{keytheorems}
 \newkeytheoremstyle{theorem}{
-  spaceabove = \topsep,
-  spacebelow = \topsep,
-  bodyfont = \itshape,
-  headfont = \bfseries,
-  headpunct = {.},
-  postheadspace = {5pt plus 1pt minus 1pt},
+  inherit-style = plain,
 }
 \renewkeytheoremstyle{definition}{
-  spaceabove = \topsep,
-  spacebelow = \topsep,
-  headfont = \bfseries,
-  headpunct = {.},
-  postheadspace = {5pt plus 1pt minus 1pt},
+  inherit-style = definition,
 }
 %    \end{macrocode}
 % \end{macro}
